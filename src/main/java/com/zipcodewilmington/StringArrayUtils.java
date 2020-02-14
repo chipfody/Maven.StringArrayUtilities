@@ -1,5 +1,12 @@
 package com.zipcodewilmington;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+import org.w3c.dom.ls.LSOutput;
+
+import javax.naming.MalformedLinkException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Created by leon on 1/29/18.
  */
@@ -9,7 +16,10 @@ public class StringArrayUtils {
      * @return first element of specified array
      */ // TODO
     public static String getFirstElement(String[] array) {
-        return array[0];
+
+        String firstElement = array[0];
+
+        return firstElement;
     }
 
     /**
@@ -17,7 +27,10 @@ public class StringArrayUtils {
      * @return second element in specified array
      */
     public static String getSecondElement(String[] array) {
-        return array[1];
+
+        String secondElement = array[1];
+
+        return secondElement;
     }
 
     /**
@@ -25,7 +38,11 @@ public class StringArrayUtils {
      * @return last element in specified array
      */ // TODO
     public static String getLastElement(String[] array) {
-        return null;
+
+        int arraySize = array.length - 1;
+        String lastElement = array[arraySize];
+
+        return lastElement;
     }
 
     /**
@@ -33,7 +50,11 @@ public class StringArrayUtils {
      * @return second to last element in specified array
      */ // TODO
     public static String getSecondToLastElement(String[] array) {
-        return null;
+
+        int arrayLength = array.length;
+        String secondToLastElement = array[arrayLength - 2];
+        return secondToLastElement;
+
     }
 
     /**
@@ -42,7 +63,14 @@ public class StringArrayUtils {
      * @return true if the array contains the specified `value`
      */ // TODO
     public static boolean contains(String[] array, String value) {
-        return false;
+
+        boolean isInArray = false;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                isInArray = true;
+            }
+        }
+        return isInArray;
     }
 
     /**
@@ -50,7 +78,14 @@ public class StringArrayUtils {
      * @return an array with identical contents in reverse order
      */ // TODO
     public static String[] reverse(String[] array) {
-        return null;
+
+        String[] reverseArray = new String[array.length];
+        int j = array.length;
+        for (int i = 0; i < array.length; i++) {
+            reverseArray[i] = array[j - 1];
+            j--;
+        }
+        return reverseArray;
     }
 
     /**
@@ -58,7 +93,14 @@ public class StringArrayUtils {
      * @return true if the order of the array is the same backwards and forwards
      */ // TODO
     public static boolean isPalindromic(String[] array) {
-        return false;
+        String[] palindromeArray = reverse(array);
+        boolean isPalindrome = false;
+
+        for (int i = 1; i < array.length; i++) {
+            isPalindrome = array[i].equals(palindromeArray[i]);
+
+        }
+        return isPalindrome;
     }
 
     /**
@@ -66,7 +108,21 @@ public class StringArrayUtils {
      * @return true if each letter in the alphabet has been used in the array
      */ // TODO
     public static boolean isPangramic(String[] array) {
-        return false;
+
+        String arrayString = Arrays.toString(array);
+        String lcString = arrayString.toLowerCase();
+        String alphaString = "abcdefghijklmnopqrstuvwxyz";
+        int alphaCounter = 0;
+
+        for (int i = 0; i< 26; i++) {
+            for (int j = 0; j < lcString.length(); j++) {
+                if (alphaString.substring(i, i + 1).equals(lcString.substring(j, j + 1))) {
+                    alphaCounter++;
+                    break;
+                }
+            }
+        }
+        return alphaCounter == 26;
     }
 
     /**
@@ -75,7 +131,13 @@ public class StringArrayUtils {
      * @return number of occurrences the specified `value` has occurred
      */ // TODO
     public static int getNumberOfOccurrences(String[] array, String value) {
-        return 0;
+        int stringCount = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(value)) {
+                stringCount++;
+            }
+        }
+        return stringCount;
     }
 
     /**
@@ -84,7 +146,22 @@ public class StringArrayUtils {
      * @return array with identical contents excluding values of `value`
      */ // TODO
     public static String[] removeValue(String[] array, String valueToRemove) {
-        return null;
+        int index = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(valueToRemove)) {
+                array[i] = null;
+                break;
+            }
+        }
+
+        String[] newArray = new String[array.length - 1];
+        for (int j = 0; j < array.length; j++) {
+            if (array[j] != null) {
+                newArray[index] = array[j];
+                index++;
+            }
+        }
+        return newArray;
     }
 
     /**
@@ -92,7 +169,26 @@ public class StringArrayUtils {
      * @return array of Strings with consecutive duplicates removes
      */ // TODO
     public static String[] removeConsecutiveDuplicates(String[] array) {
-        return null;
+
+        String temp = array[0];
+        int nullCount = 0;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i].equals(temp)) {
+                array[i] = null;
+                nullCount++;
+            } else {
+               temp = array[i];
+            }
+        }
+        String[] lessConsecutive = new String[array.length - nullCount];
+        int index = 0;
+        for (int j = 0; j < array.length; j++) {
+            if (array[j] != null) {
+                lessConsecutive[index] = array[j];
+                index++;
+            }
+        }
+        return lessConsecutive;
     }
 
     /**
@@ -100,8 +196,30 @@ public class StringArrayUtils {
      * @return array of Strings with each consecutive duplicate occurrence concatenated as a single string in an array of Strings
      */ // TODO
     public static String[] packConsecutiveDuplicates(String[] array) {
-        return null;
-    }
+        int index = 0;
+        String temp = array[0];
+        String tempString = temp;
+        String[] strArray = new String[array.length];
 
+        for (int i = 1; i < array.length; i++) {
+            if (array[i].equals(temp)) {
+                tempString += temp;
+            } else {
+                strArray[index] = tempString;
+                temp = array[i];
+                tempString = temp;
+                index++;
+            }
+            strArray[index] = tempString;
+
+
+        }
+        String[] finalArray = new String[index + 1];
+        for (int j = 0; j < index + 1; j++) {
+            finalArray[j] = strArray[j];}
+
+
+        return finalArray;
+    }
 
 }
